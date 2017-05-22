@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `daemonize` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, daemonize">
+
+    <title>daemonize - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc mod">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'daemonize', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>daemonize</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/daemonize/lib.rs.html#9-443' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>daemonize is a library for writing system daemons. Inspired by the Python library <a href="https://github.com/thesharp/daemonize">thesharp/daemonize</a>.</p>
+
+<p>The respository is located at <a href="https://github.com/knsd/daemonize/">https://github.com/knsd/daemonize/</a>.</p>
+
+<p>Usage example:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="attribute">#[<span class="ident">macro_use</span>]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">daemonize</span>;
+
+<span class="kw">use</span> <span class="ident">daemonize</span>::{<span class="ident">Daemonize</span>};
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">let</span> <span class="ident">daemonize</span> <span class="op">=</span> <span class="ident">Daemonize</span>::<span class="ident">new</span>()
+        .<span class="ident">pid_file</span>(<span class="string">&quot;/tmp/test.pid&quot;</span>) <span class="comment">// Every method except `new` and `start`</span>
+        .<span class="ident">chown_pid_file</span>(<span class="bool-val">true</span>)      <span class="comment">// is optional, see `Daemonize` documentation</span>
+        .<span class="ident">working_directory</span>(<span class="string">&quot;/tmp&quot;</span>) <span class="comment">// for default behaviour.</span>
+        .<span class="ident">user</span>(<span class="string">&quot;nobody&quot;</span>)
+        .<span class="ident">group</span>(<span class="string">&quot;daemon&quot;</span>) <span class="comment">// Group name</span>
+        .<span class="ident">group</span>(<span class="number">2</span>)        <span class="comment">// or group id.</span>
+        .<span class="ident">umask</span>(<span class="number">0o777</span>)    <span class="comment">// Set umask, `0o027` by default.</span>
+        .<span class="ident">privileged_action</span>(<span class="op">||</span> <span class="string">&quot;Executed before drop privileges&quot;</span>);
+
+    <span class="kw">match</span> <span class="ident">daemonize</span>.<span class="ident">start</span>() {
+        <span class="prelude-val">Ok</span>(_) <span class="op">=&gt;</span> <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Success, daemonized&quot;</span>),
+        <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>),
+    }
+}</pre>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Daemonize.html"
+                                  title='struct daemonize::Daemonize'>Daemonize</a></td>
+                           <td class='docblock-short'>
+                                <p>Daemonization options.</p>
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.DaemonizeError.html"
+                                  title='enum daemonize::DaemonizeError'>DaemonizeError</a></td>
+                           <td class='docblock-short'>
+                                <p>This error type for <code>Daemonize</code> <code>start</code> method.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.Group.html"
+                                  title='enum daemonize::Group'>Group</a></td>
+                           <td class='docblock-short'>
+                                <p>Expects system group id or name. If name is provided it will be resolved to id later.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.User.html"
+                                  title='enum daemonize::User'>User</a></td>
+                           <td class='docblock-short'>
+                                <p>Expects system user id or name. If name is provided it will be resolved to id later.</p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.Errno.html"
+                                  title='type daemonize::Errno'>Errno</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.gid_t.html"
+                                  title='type daemonize::gid_t'>gid_t</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.mode_t.html"
+                                  title='type daemonize::mode_t'>mode_t</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.uid_t.html"
+                                  title='type daemonize::uid_t'>uid_t</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "daemonize";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

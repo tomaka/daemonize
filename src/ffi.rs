@@ -44,7 +44,7 @@ unsafe fn errno_location() -> *const libc::c_int {
 }
 
 
-#[cfg(target_os = "openbsd")]
+#[cfg(any(target_os = "openbsd", target_os = "android"))]
 unsafe fn errno_location() -> *const libc::c_int {
     extern { fn __errno() -> *const libc::c_int; }
     __errno()
